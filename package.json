@@ -5,7 +5,7 @@
   "main": "server.ts",
   "scripts": {
     "test": "jest --coverage",
-    "dev": "nodemon ./server.ts",
+    "dev": "nodemon src/server.ts",
     "build": "tsc"
   },
   "author": "",
