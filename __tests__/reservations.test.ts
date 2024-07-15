@@ -1,5 +1,5 @@
 import request from "supertest";
-import app from "../app";
+import app from "../src/app";
 
 // Define a reservation object for testing which is known to exist in the database
 const reservation1 = {

@@ -1,6 +1,6 @@
 import request from "supertest";
-import app from "../app";
-import basetext from "../app";
+import app from "../src/app";
+import basetext from "../src/app";
 
 describe("GET /", () => {
   it("should return 200 OK", async () => {
