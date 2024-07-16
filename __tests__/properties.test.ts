@@ -17,7 +17,7 @@ describe("GET /properties", () => {
   it("should return 200 OK", async () => {
     const response = await request(app).get("/properties");
     expect(response.status).toBe(200);
-    expect(Object.keys(response.body).length).toBe(4);
+    expect(Object.keys(response.body).length).toBe(15);
     expect(response.body[0]).toEqual(property1);
   });
 });
