@@ -5,8 +5,8 @@ const reservation1 = {
   reservationid: 1,
   username: "johndoe",
   propertyid: 1,
-  startdate: "2024-01-01",
-  enddate: "2024-01-07",
+  startdate: "2025-01-01",
+  enddate: "2025-01-07",
 };
 
 const overlapping_reservation = {
@@ -14,38 +14,38 @@ const overlapping_reservation = {
   username: "brucewayne",
   propertyid: 1,
   startdate: "2023-12-27",
-  enddate: "2024-01-09",
+  enddate: "2025-01-09",
 };
 
 const interior_reservation = {
   reservationid: 3,
   username: "brucewayne",
   propertyid: 1,
-  startdate: "2024-01-02",
-  enddate: "2024-01-06",
+  startdate: "2025-01-02",
+  enddate: "2025-01-06",
 };
 
 const non_overlapping_reservation = {
   reservationid: 4,
   username: "janedoe",
   propertyid: 1,
-  startdate: "2024-01-08",
-  enddate: "2024-01-14",
+  startdate: "2025-01-08",
+  enddate: "2025-01-14",
 };
 
 const reservation2 = {
   reservationid: 5,
   username: "sentinel",
   propertyid: 1,
-  startdate: "2020-03-04",
-  enddate: "2020-05-07",
+  startdate: "2025-03-04",
+  enddate: "2025-05-07",
 };
 
 const incomplete_reservation = {
   reservationid: 6,
   username: "sentinel",
   propertyid: 1,
-  startdate: "2020-05-07",
+  startdate: "2025-05-07",
   enddate: null,
 };
 
@@ -75,16 +75,16 @@ describe("checkAvailability", () => {
 // Test the checkDatesInOrder method
 describe("checkDatesInOrder", () => {
   test("returns true for dates in order", () => {
-    expect(ReservationUtil.checkDatesInOrder("2020-01-01", "2020-01-07")).toBe(
+    expect(ReservationUtil.checkDatesInOrder("2025-01-01", "2025-01-07")).toBe(
       true
     );
-    expect(ReservationUtil.checkDatesInOrder("2019-08-19", "2020-01-05")).toBe(
+    expect(ReservationUtil.checkDatesInOrder("2019-08-19", "2025-01-05")).toBe(
       true
     );
   });
 
   test("returns false for dates out of order", () => {
-    expect(ReservationUtil.checkDatesInOrder("2020-01-02", "2020-01-01")).toBe(
+    expect(ReservationUtil.checkDatesInOrder("2025-01-02", "2025-01-01")).toBe(
       false
     );
   });
@@ -106,10 +106,10 @@ describe("checkRequiredFields", () => {
 // Test the isValidDate method
 describe("isValidDate", () => {
   test("returns true for a valid date", () => {
-    expect(ReservationUtil.isValidDate("2020-01-01")).toBe(true);
+    expect(ReservationUtil.isValidDate("2025-01-01")).toBe(true);
   });
 
   test("returns false for an invalid date", () => {
-    expect(ReservationUtil.isValidDate("2020-01-32")).toBe(false);
+    expect(ReservationUtil.isValidDate("2025-01-32")).toBe(false);
   });
 });

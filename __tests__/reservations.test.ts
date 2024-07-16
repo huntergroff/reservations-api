@@ -6,8 +6,8 @@ const reservation1 = {
   reservationid: 1,
   username: "johndoe",
   propertyid: 1,
-  startdate: "2020-01-01",
-  enddate: "2020-01-07",
+  startdate: "2025-01-01",
+  enddate: "2025-01-07",
 };
 
 // Test the GET /reservations endpoint, which should return all reservations in the database
@@ -102,15 +102,15 @@ describe("POST /reservation", () => {
     const details = {
       username: "johndoe",
       propertyid: 1,
-      startdate: "2024-12-01",
-      enddate: "2024-12-07",
+      startdate: "2025-12-01",
+      enddate: "2025-12-07",
     };
     const response = await request(app).post("/reservation").send(details);
     expect(response.status).toBe(201);
     expect(response.body.username).toBe("johndoe");
     expect(response.body.propertyid).toBe(1);
-    expect(response.body.startdate).toBe("2024-12-01");
-    expect(response.body.enddate).toBe("2024-12-07");
+    expect(response.body.startdate).toBe("2025-12-01");
+    expect(response.body.enddate).toBe("2025-12-07");
     const id = response.body.reservationid;
 
     //make sure the reservation was created
@@ -139,8 +139,8 @@ describe("POST /reservation with unavailable property", () => {
     const response = await request(app).post("/reservation").send({
       username: "brucewayne",
       propertyid: 1,
-      startdate: "2020-01-03",
-      enddate: "2020-01-06",
+      startdate: "2025-01-03",
+      enddate: "2025-01-06",
     });
     expect(response.status).toBe(400);
     expect(response.text).toBe(
@@ -155,8 +155,8 @@ describe("POST /reservation with unavailable property", () => {
     const response = await request(app).post("/reservation").send({
       username: "brucewayne",
       propertyid: 1,
-      startdate: "2020-01-01",
-      enddate: "2020-01-04",
+      startdate: "2025-01-01",
+      enddate: "2025-01-04",
     });
     expect(response.status).toBe(400);
     expect(response.text).toBe(
@@ -171,8 +171,8 @@ describe("POST /reservation with existing reservation", () => {
     const response = await request(app).post("/reservation").send({
       username: "johndoe",
       propertyid: 2,
-      startdate: "2020-01-01",
-      enddate: "2020-01-07",
+      startdate: "2025-01-01",
+      enddate: "2025-01-07",
     });
     expect(response.status).toBe(400);
     expect(response.text).toBe(
@@ -217,8 +217,8 @@ describe("DELETE /reservation/:reservationid with invalid reservation id", () =>
 describe("PUT /reservation/:reservationid with valid reservation", () => {
   it("should return 200 OK", async () => {
     const details = {
-      startdate: "2020-01-04",
-      enddate: "2020-01-12",
+      startdate: "2025-01-04",
+      enddate: "2025-01-12",
     };
     // Check that the reservation exists and has the original dates
     const originalReservation = await request(app).get("/reservation/1");
@@ -257,8 +257,8 @@ describe("PUT /reservation/:reservationid with unknown reservation", () => {
 describe("PUT /reservation/:reservationid with unavailable property", () => {
   it("should return 400 BAD REQUEST", async () => {
     const response = await request(app).put("/reservation/1").send({
-      startdate: "2020-06-01",
-      enddate: "2020-06-04",
+      startdate: "2025-06-01",
+      enddate: "2025-06-04",
     });
     expect(response.status).toBe(400);
     expect(response.text).toBe(
