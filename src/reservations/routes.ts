@@ -1,6 +1,7 @@
 import { Express, Request, Response } from "express";
 import * as dao from "./dao";
 import Reservation from "./reservation.type";
+import ReservationUtil from "./utility";
 
 /* Routes for interacting with reservations in the database. */
 function reservationRoutes(app: Express) {
@@ -93,29 +94,6 @@ function reservationRoutes(app: Express) {
   app.get("/property/:propertyid/reservations", getReservationsByPropertyId);
   app.get("/reservations", getReservations);
   app.post("/reserve", postReservation);
-}
-
-class ReservationUtil {
-  static checkAvailability(
-    reservation: Reservation,
-    existingReservations: Reservation[]
-  ) {
-    for (const existingReservation of existingReservations) {
-      if (
-        reservation.startdate >= existingReservation.startdate &&
-        reservation.startdate <= existingReservation.enddate
-      ) {
-        return false;
-      }
-      if (
-        reservation.enddate >= existingReservation.startdate &&
-        reservation.enddate <= existingReservation.enddate
-      ) {
-        return false;
-      }
-    }
-    return true;
-  }
 }
 
 export default reservationRoutes;

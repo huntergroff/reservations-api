@@ -1,4 +1,4 @@
-/* Mock database. Built to simulate a database in local memory. */
+/* Mock reservations table. Built to simulate a database in local memory. */
 const reservations = [
   {
     reservationid: 1,
