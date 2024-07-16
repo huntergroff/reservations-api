@@ -1,6 +1,7 @@
 import request from "supertest";
 import app from "../src/app";
 
+// Define a property object for testing which is known to exist in the database
 const property1 = {
   propertyid: 1,
   name: "The Grand Hotel",

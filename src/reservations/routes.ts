@@ -1,6 +1,7 @@
 import { Express, Request, Response } from "express";
 import * as dao from "./dao";
 import Reservation from "./reservation.type";
+import ReservationUtil from "./utility";
 
 /* Routes for interacting with reservations in the database. */
 function reservationRoutes(app: Express) {
@@ -45,8 +46,8 @@ function reservationRoutes(app: Express) {
 
   // Create a new reservation
   const postReservation = async (req: Request, res: Response) => {
-    const { username, propertyid, startdate, enddate } = req.body;
-    if (!username || !propertyid || !startdate || !enddate) {
+    // Check for required fields
+    if (!ReservationUtil.checkRequiredFields(req.body)) {
       res
         .status(400)
         .send(
@@ -54,13 +55,36 @@ function reservationRoutes(app: Express) {
         );
       return;
     }
+
     const reservation: Reservation = {
       reservationid: null,
-      username: username,
-      propertyid: propertyid,
-      startdate: startdate,
-      enddate: enddate,
+      username: req.body.username,
+      propertyid: req.body.propertyid,
+      startdate: req.body.startdate,
+      enddate: req.body.enddate,
     };
+
+    // Check that dates are valid
+    if (
+      !ReservationUtil.isValidDate(reservation.startdate) ||
+      !ReservationUtil.isValidDate(reservation.enddate)
+    ) {
+      res.status(400).send("Invalid date format. Please use YYYY-MM-DD.");
+      return;
+    }
+
+    // Check that dates are in order
+    if (
+      !ReservationUtil.checkDatesInOrder(
+        reservation.startdate,
+        reservation.enddate
+      )
+    ) {
+      res.status(400).send("Start date must be before end date.");
+      return;
+    }
+
+    // Check that property and user are available
     const existingPropertyReservations = await dao.findReservationsByPropertyId(
       req.body.propertyid
     );
@@ -84,6 +108,8 @@ function reservationRoutes(app: Express) {
         .send("User already has a reservation for the selected dates.");
       return;
     }
+
+    // Create the reservation
     const newReservation = await dao.createReservation(reservation);
     res.status(201).json(newReservation);
   };
@@ -93,29 +119,6 @@ function reservationRoutes(app: Express) {
   app.get("/property/:propertyid/reservations", getReservationsByPropertyId);
   app.get("/reservations", getReservations);
   app.post("/reserve", postReservation);
-}
-
-class ReservationUtil {
-  static checkAvailability(
-    reservation: Reservation,
-    existingReservations: Reservation[]
-  ) {
-    for (const existingReservation of existingReservations) {
-      if (
-        reservation.startdate >= existingReservation.startdate &&
-        reservation.startdate <= existingReservation.enddate
-      ) {
-        return false;
-      }
-      if (
-        reservation.enddate >= existingReservation.startdate &&
-        reservation.enddate <= existingReservation.enddate
-      ) {
-        return false;
-      }
-    }
-    return true;
-  }
 }
 
 export default reservationRoutes;
