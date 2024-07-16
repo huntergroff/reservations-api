@@ -15,7 +15,9 @@ function reservationRoutes(app: Express) {
   const getReservation = async (req: Request, res: Response) => {
     const { id } = req.params;
     if (Number.isNaN(parseInt(id))) {
-      res.status(400).send("Invalid property ID. Please provide a valid ID.");
+      res
+        .status(400)
+        .send("Invalid reservation ID. Please provide a valid ID.");
       return;
     }
     const reservation = await dao.findReservationById(parseInt(id));
@@ -142,12 +144,96 @@ function reservationRoutes(app: Express) {
     }
   };
 
+  // Update a reservation by its ID, changing the start and end dates
+  const updateReservation = async (req: Request, res: Response) => {
+    const { id } = req.params;
+    const { startdate, enddate } = req.body;
+    if (Number.isNaN(parseInt(id))) {
+      res
+        .status(400)
+        .send("Invalid reservation ID. Please provide a valid ID.");
+      return;
+    }
+    const reservation = await dao.findReservationById(parseInt(id));
+
+    if (!reservation) {
+      res.status(404).send("Reservation not found.");
+      return;
+    }
+
+    // Check that new dates are valid
+    if (
+      !ReservationUtil.isValidDate(startdate) ||
+      !ReservationUtil.isValidDate(enddate)
+    ) {
+      res.status(400).send("Invalid date format. Please use YYYY-MM-DD.");
+      return;
+    }
+
+    // Check that new dates are in order
+    if (!ReservationUtil.checkDatesInOrder(startdate, enddate)) {
+      res.status(400).send("Start date must be before end date.");
+      return;
+    }
+
+    const newReservation = {
+      ...reservation,
+      startdate,
+      enddate,
+    };
+    console.log(newReservation);
+
+    // Get all reservations for the property and user (excluding the current reservation)
+    const existingPropertyReservations = await dao.findReservationsByPropertyId(
+      reservation.propertyid
+    );
+    const filteredPropertyReservations = existingPropertyReservations.filter(
+      (r) => r.reservationid !== reservation.reservationid
+    );
+    const existingUserReservations = await dao.findReservationsByUserId(
+      reservation.username
+    );
+    const filteredUserReservations = existingUserReservations.filter(
+      (r) => r.reservationid !== reservation.reservationid
+    );
+
+    // Check that property and user are available
+    if (
+      !ReservationUtil.checkAvailability(
+        newReservation,
+        filteredPropertyReservations
+      )
+    ) {
+      res.status(400).send("Property is not available for the selected dates.");
+      return;
+    }
+    if (
+      !ReservationUtil.checkAvailability(
+        newReservation,
+        filteredUserReservations
+      )
+    ) {
+      res
+        .status(400)
+        .send("User already has a reservation for the selected dates.");
+      return;
+    }
+
+    // Update the reservation
+    const updatedReservation = await dao.updateReservation(
+      parseInt(id),
+      newReservation
+    );
+    res.json(updatedReservation);
+  };
+
   app.get("/reservation/:id", getReservation);
   app.get("/user/:userid/reservations", getReservationsByUserId);
   app.get("/property/:propertyid/reservations", getReservationsByPropertyId);
   app.get("/reservations", getReservations);
   app.post("/reservation", postReservation);
   app.delete("/reservation/:id", deleteReservation);
+  app.put("/reservation/:id", updateReservation);
 }
 
 export default reservationRoutes;
