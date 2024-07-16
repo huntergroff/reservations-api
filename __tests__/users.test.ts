@@ -9,6 +9,13 @@ const johndoe = {
   role: "USER",
 };
 
+const sentinel = {
+  username: "sentinel",
+  name: "Sentinel",
+  email: "sentinel@admin.org",
+  role: "ADMIN",
+};
+
 // Test the GET /users endpoint, which should return all users
 describe("GET /users", () => {
   it("should return 200 OK", async () => {
@@ -34,5 +41,14 @@ describe("GET /user/:username", () => {
     const response = await request(app).get("/user/johndoe");
     expect(response.status).toBe(200);
     expect(response.body).toEqual(johndoe);
+  });
+});
+
+// Test the GET /user endpoint, which should return the current user
+describe("GET /user", () => {
+  it("should return 200 OK", async () => {
+    const response = await request(app).get("/user");
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual(sentinel);
   });
 });

@@ -7,6 +7,7 @@ Welcome to my Vacation Home Reservation API prototype. This is a Node and Expres
 **Prototype Notes:**
 
 - The prototype uses in-memory storage and does not persist, but is designed to be easily connected to a Mongo database in the future by replacing the three `model.ts` files with imported mongoose models.
+- In lieu of routes for sign up/log in/log out, the prototype uses a mock session where the user is always logged in as an admin. Thus, the prototype allows access to all routes, while in reality certain routes would be restricted (like getting all reservations for another user.)
 
 ## Endpoints
 
@@ -18,6 +19,7 @@ _For tests displaying functionality of all "users" endpoints, see \_\_tests\_\_/
 
 - `GET /users`: Retrieve all users.
 - `GET /users/{username}`: Retrieve a specific user by their username.
+- `GET /user`: Retrieve the current user.
 
 #### Properties
 
@@ -52,5 +54,3 @@ _For tests displaying functionality of all "reservations" endpoints, see \_\_tes
 ## Running locally
 
 To run the API locally, clone this repository, navigate to the root directory and use the command `npm run dev` to start the server on port 3000. To run the tests, use `npm run test`.
-
-##
