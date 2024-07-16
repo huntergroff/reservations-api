@@ -1,6 +1,8 @@
 import Reservation from "./reservation.type";
 
+/* Utility functions for checking validity of reservations */
 class ReservationUtil {
+  // Check if a reservation is valid given existing reservations
   static checkAvailability(
     reservation: Reservation,
     existingReservations: Reservation[]
@@ -26,6 +28,7 @@ class ReservationUtil {
     return true;
   }
 
+  // Check if the start date is before the end date
   static checkDatesInOrder(startdate: string, enddate: string) {
     if (startdate >= enddate) {
       return false;
@@ -33,6 +36,7 @@ class ReservationUtil {
     return true;
   }
 
+  // Check if all required fields are present in the reservation
   static checkRequiredFields(reservation: Reservation) {
     if (
       !reservation.username ||
@@ -45,6 +49,7 @@ class ReservationUtil {
     return true;
   }
 
+  // Check if a date is in the correct format
   static isValidDate(date: string) {
     return Date.parse(date) ? true : false;
   }

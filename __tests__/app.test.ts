@@ -1,7 +1,7 @@
 import request from "supertest";
 import app from "../src/app";
-import basetext from "../src/app";
 
+// Test the GET / endpoint, which should return a welcome message
 describe("GET /", () => {
   it("should return 200 OK", async () => {
     const response = await request(app).get("/");

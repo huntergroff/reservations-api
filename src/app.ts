@@ -4,6 +4,8 @@ import userRoutes from "./users/routes";
 import reservationRoutes from "./reservations/routes";
 import propertyRoutes from "./properties/routes";
 
+/* Create the Express app and compile all routes */
+
 const app = express();
 app.use(bodyparser.json());
 
