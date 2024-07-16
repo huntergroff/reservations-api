@@ -27,7 +27,7 @@ _For tests displaying functionality of all "properties" endpoints, see \_\_tests
 
 - `GET /properties`: Retrieve all properties.
 - `GET /properties/{id}`: Retrieve a specific property by ID.
-- `GET /properties/{type}`: Retrieve all properties of a given type (ex. Beach House, Apartment, Cabin, etc.)
+- `GET /properties/{type}`: Retrieve all properties of a given type (ex. Beach House, Lake House, Cabin, City Apartment, Hotel, etc.)
 
 #### Reservations
 
