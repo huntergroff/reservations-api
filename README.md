@@ -59,4 +59,4 @@ To run the API locally, clone this repository, navigate to the root directory an
 
 #### On Github
 
-The repository features an action that automatically runs on every push to `main` or PR created. You may manually trigger this action by navigating to the repository's "Actions" tab, selecting "Run Jest Tests" and using the "Run Workflow" dropdown. This will allow you to run the tests without cloning the repository.
+The repository features a "Run Jest Tests" workflow that automatically runs on every push to `main` or PR created. You may manually trigger these tests by navigating to the repository's "Actions" tab, selecting "Run Jest Tests" and using the "Run Workflow" dropdown. This will allow you to run the tests without cloning the repository.
