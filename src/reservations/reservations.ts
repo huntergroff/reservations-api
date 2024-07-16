@@ -11,15 +11,22 @@ const reservations = [
     reservationid: 2,
     username: "brucewayne",
     propertyid: 2,
-    startdate: "2024-01-01",
-    enddate: "2024-01-07",
+    startdate: "2020-03-04",
+    enddate: "2020-04-09",
   },
   {
     reservationid: 3,
     username: "sentinel",
     propertyid: 3,
-    startdate: "2020-01-01",
-    enddate: "2020-01-07",
+    startdate: "2020-06-23",
+    enddate: "2020-06-24",
+  },
+  {
+    reservationid: 4,
+    username: "brucewayne",
+    propertyid: 1,
+    startdate: "2020-06-01",
+    enddate: "2020-06-07",
   },
 ];
 

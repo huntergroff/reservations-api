@@ -16,7 +16,6 @@ class ReservationsModel {
 
   // Find a reservation by its id
   static async findOne({ reservationid }) {
-    const res = reservations.find((r) => r.reservationid == reservationid);
     return reservations.find((r) => r.reservationid == reservationid);
   }
 

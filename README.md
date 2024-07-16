@@ -39,15 +39,15 @@ _For tests displaying functionality of all "reservations" endpoints, see \_\_tes
 - `GET /property/{id}/reservations`: Retrieve all reservations for a given property.
 - `POST /reservation`: Create a new reservation.
   - Requires JSON body with the following properties:
-    - `"user_id": string`,
-    - `"property_id": number`,
-    - `"start_date": string (YYYY-MM-DD)`,
-    - `"end_date": string (YYYY-MM-DD)`
+    - `"userid": string`,
+    - `"propertyid": number`,
+    - `"startdate": string (YYYY-MM-DD)`,
+    - `"enddate": string (YYYY-MM-DD)`
   - The given user and property must be available for the entirety of the reservation period, otherwise the reservation will be rejected.
 - `PUT /reservation/{id}`: Updates the given reservation with a new start date and end date.
   - Requires JSON body with the following properties:
-    - `"start_date": string (YYYY-MM-DD)`,
-    - `"end_date": string (YYYY-MM-DD)`,
+    - `"startdate": string (YYYY-MM-DD)`,
+    - `"enddate": string (YYYY-MM-DD)`,
   - The user and property in the reservation must be available for the entirety of the new reservation period, otherwise the update will be rejected.
 - `DELETE /reservation/{id}`: Deletes the reservation with the given id.
 

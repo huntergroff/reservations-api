@@ -38,6 +38,17 @@ describe("GET /reservation/:reservationid with unknown reservation", () => {
   });
 });
 
+// Test the GET /reservation/:reservationid endpoint, which should return bad request for an invalid reservation id
+describe("GET /reservation/:reservationid with invalid reservation id", () => {
+  it("should return 400 BAD REQUEST", async () => {
+    const response = await request(app).get("/reservation/invalid");
+    expect(response.status).toBe(400);
+    expect(response.text).toBe(
+      "Invalid reservation ID. Please provide a valid ID."
+    );
+  });
+});
+
 // Test the GET /user/:username/reservations endpoint, which should return all reservations for a user
 describe("GET /user/:username/reservations with valid user", () => {
   it("should return 200 OK", async () => {
@@ -71,6 +82,17 @@ describe("GET /property/:propertyid/reservations with unknown property", () => {
   it("should return 204 NO CONTENT", async () => {
     const response = await request(app).get("/property/0/reservations");
     expect(response.status).toBe(204);
+  });
+});
+
+// Test the GET /property/:propertyid/reservations endpoint, which should return bad request for an invalid property id
+describe("GET /property/:propertyid/reservations with invalid property id", () => {
+  it("should return 400 BAD REQUEST", async () => {
+    const response = await request(app).get("/property/invalid/reservations");
+    expect(response.status).toBe(400);
+    expect(response.text).toBe(
+      "Invalid property ID. Please provide a valid ID."
+    );
   });
 });
 
@@ -162,9 +184,12 @@ describe("POST /reservation with existing reservation", () => {
 // Test the DELETE /reservation/:reservationid endpoint, which should delete a reservation known to exist in the database
 describe("DELETE /reservation/:reservationid with valid reservation", () => {
   it("should return 200 OK", async () => {
-    const response = await request(app).delete("/reservation/1");
+    const response = await request(app).delete("/reservation/2");
     expect(response.status).toBe(200);
     expect(response.text).toBe("Reservation deleted.");
+    // Check that the reservation was deleted
+    const deletedReservation = await request(app).get("/reservation/2");
+    expect(deletedReservation.status).toBe(404);
   });
 });
 
@@ -174,5 +199,70 @@ describe("DELETE /reservation/:reservationid with unknown reservation", () => {
     const response = await request(app).delete("/reservation/0");
     expect(response.status).toBe(404);
     expect(response.text).toBe("Reservation not found.");
+  });
+});
+
+// Test the DELETE /reservation/:reservationid endpoint, which should return bad request for an invalid reservation id
+describe("DELETE /reservation/:reservationid with invalid reservation id", () => {
+  it("should return 400 BAD REQUEST", async () => {
+    const response = await request(app).delete("/reservation/invalid");
+    expect(response.status).toBe(400);
+    expect(response.text).toBe(
+      "Invalid reservation ID. Please provide a valid ID."
+    );
+  });
+});
+
+// Test the PUT /reservation/:reservationid endpoint, which should update a reservation known to exist in the database
+describe("PUT /reservation/:reservationid with valid reservation", () => {
+  it("should return 200 OK", async () => {
+    const details = {
+      startdate: "2020-01-04",
+      enddate: "2020-01-12",
+    };
+    // Check that the reservation exists and has the original dates
+    const originalReservation = await request(app).get("/reservation/1");
+    expect(originalReservation.body).toMatchObject(reservation1);
+
+    // Update the reservation
+    const response = await request(app).put("/reservation/1").send(details);
+    expect(response.status).toBe(200);
+    expect(response.body).toMatchObject({
+      ...reservation1,
+      ...details,
+    });
+
+    // Check that the reservation was updated
+    const updatedReservation = await request(app).get("/reservation/1");
+    expect(updatedReservation.body).toMatchObject({
+      ...reservation1,
+      ...details,
+    });
+  });
+});
+
+// Test the PUT /reservation/:reservationid endpoint, which should return not found for an unknown reservation
+describe("PUT /reservation/:reservationid with unknown reservation", () => {
+  it("should return 404 Not Found", async () => {
+    const response = await request(app).put("/reservation/0").send({
+      startdate: "2025-12-01",
+      enddate: "2025-12-07",
+    });
+    expect(response.status).toBe(404);
+    expect(response.text).toBe("Reservation not found.");
+  });
+});
+
+// Test the PUT /reservation/:reservationid endpoint, which should return bad request for unavailable property
+describe("PUT /reservation/:reservationid with unavailable property", () => {
+  it("should return 400 BAD REQUEST", async () => {
+    const response = await request(app).put("/reservation/1").send({
+      startdate: "2020-06-01",
+      enddate: "2020-06-04",
+    });
+    expect(response.status).toBe(400);
+    expect(response.text).toBe(
+      "Property is not available for the selected dates."
+    );
   });
 });
