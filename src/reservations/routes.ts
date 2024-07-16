@@ -14,7 +14,11 @@ function reservationRoutes(app: Express) {
   // Get a reservation by its ID
   const getReservation = async (req: Request, res: Response) => {
     const { id } = req.params;
-    const reservation = await dao.findReservationById(id);
+    if (Number.isNaN(parseInt(id))) {
+      res.status(400).send("Invalid property ID. Please provide a valid ID.");
+      return;
+    }
+    const reservation = await dao.findReservationById(parseInt(id));
     if (!reservation) {
       res.status(404).send("Reservation not found.");
     } else {
@@ -36,7 +40,13 @@ function reservationRoutes(app: Express) {
   // Get all reservations for a property by its ID
   const getReservationsByPropertyId = async (req: Request, res: Response) => {
     const { propertyid } = req.params;
-    const reservations = await dao.findReservationsByPropertyId(propertyid);
+    if (Number.isNaN(parseInt(propertyid))) {
+      res.status(400).send("Invalid property ID. Please provide a valid ID.");
+      return;
+    }
+    const reservations = await dao.findReservationsByPropertyId(
+      parseInt(propertyid)
+    );
     if (reservations.length === 0) {
       res.status(204).send();
     } else {
@@ -117,11 +127,17 @@ function reservationRoutes(app: Express) {
   // Delete a reservation by its ID
   const deleteReservation = async (req: Request, res: Response) => {
     const { id } = req.params;
-    const reservation = await dao.findReservationById(id);
+    if (Number.isNaN(parseInt(id))) {
+      res
+        .status(400)
+        .send("Invalid reservation ID. Please provide a valid ID.");
+      return;
+    }
+    const reservation = await dao.findReservationById(parseInt(id));
     if (!reservation) {
       res.status(404).send("Reservation not found.");
     } else {
-      await dao.deleteReservation(id);
+      await dao.deleteReservation(parseInt(id));
       res.send("Reservation deleted.");
     }
   };

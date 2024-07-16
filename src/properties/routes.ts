@@ -1,5 +1,6 @@
 import { Express, Request, Response } from "express";
 import * as dao from "./dao";
+import { parse } from "path";
 
 /* Routes for the property resource */
 function propertyRoutes(app: Express) {
@@ -12,7 +13,11 @@ function propertyRoutes(app: Express) {
   // Get a property by its ID
   const getProperty = async (req: Request, res: Response) => {
     const { id } = req.params;
-    const property = await dao.findPropertyById(id);
+    if (Number.isNaN(parseInt(id))) {
+      res.status(400).send("Invalid property ID. Please provide a valid ID.");
+      return;
+    }
+    const property = await dao.findPropertyById(parseInt(id));
     if (!property) {
       res.status(404).send("Property not found.");
     } else {

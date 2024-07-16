@@ -7,8 +7,8 @@ class ReservationsModel {
     if (id) {
       if (id.userid) {
         return reservations.filter((r) => r.username === id.userid);
-      } else if (id.propertyid) {
-        return reservations.filter((r) => r.propertyid === +id.propertyid);
+      } else if ("propertyid" in id) {
+        return reservations.filter((r) => r.propertyid === id.propertyid);
       }
     }
     return reservations;
