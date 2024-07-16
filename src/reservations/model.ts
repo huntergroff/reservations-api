@@ -33,6 +33,29 @@ class ReservationsModel {
     // Return the reservation
     return reservation;
   }
+
+  // Delete a reservation by its id
+  static async deleteOne({ reservationid }) {
+    const index = reservations.findIndex(
+      (r) => r.reservationid == reservationid
+    );
+    if (index === -1) {
+      return null;
+    }
+    return reservations.splice(index, 1)[0];
+  }
+
+  // Update a reservation by its id
+  static async updateOne({ reservationid, reservation }) {
+    const index = reservations.findIndex(
+      (r) => r.reservationid == reservationid
+    );
+    if (index === -1) {
+      return null;
+    }
+    reservations[index] = { ...reservations[index], ...reservation };
+    return reservations[index];
+  }
 }
 
 export default ReservationsModel;
