@@ -114,11 +114,24 @@ function reservationRoutes(app: Express) {
     res.status(201).json(newReservation);
   };
 
+  // Delete a reservation by its ID
+  const deleteReservation = async (req: Request, res: Response) => {
+    const { id } = req.params;
+    const reservation = await dao.findReservationById(id);
+    if (!reservation) {
+      res.status(404).send("Reservation not found.");
+    } else {
+      await dao.deleteReservation(id);
+      res.send("Reservation deleted.");
+    }
+  };
+
   app.get("/reservation/:id", getReservation);
   app.get("/user/:userid/reservations", getReservationsByUserId);
   app.get("/property/:propertyid/reservations", getReservationsByPropertyId);
   app.get("/reservations", getReservations);
-  app.post("/reserve", postReservation);
+  app.post("/reservation", postReservation);
+  app.delete("/reservation/:id", deleteReservation);
 }
 
 export default reservationRoutes;

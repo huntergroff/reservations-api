@@ -74,27 +74,33 @@ describe("GET /property/:propertyid/reservations with unknown property", () => {
   });
 });
 
-// Test the POST /reserve endpoint, which should create a new reservation
-describe("POST /reserve", () => {
+// Test the POST /reservation endpoint, which should create a new reservation
+describe("POST /reservation", () => {
   it("should return 201 CREATED", async () => {
-    const response = await request(app).post("/reserve").send({
+    const details = {
       username: "johndoe",
       propertyid: 1,
       startdate: "2024-12-01",
       enddate: "2024-12-07",
-    });
+    };
+    const response = await request(app).post("/reservation").send(details);
     expect(response.status).toBe(201);
     expect(response.body.username).toBe("johndoe");
     expect(response.body.propertyid).toBe(1);
     expect(response.body.startdate).toBe("2024-12-01");
     expect(response.body.enddate).toBe("2024-12-07");
+    const id = response.body.reservationid;
+
+    //make sure the reservation was created
+    const reservation = await request(app).get("/reservation/" + id);
+    expect(reservation.body).toMatchObject(details);
   });
 });
 
-// Test the POST /reserve endpoint, which should return bad request for missing fields
-describe("POST /reserve with missing fields", () => {
+// Test the POST /reservation endpoint, which should return bad request for missing fields
+describe("POST /reservation with missing fields", () => {
   it("should return 400 BAD REQUEST", async () => {
-    const response = await request(app).post("/reserve").send({
+    const response = await request(app).post("/reservation").send({
       username: "johndoe",
       propertyid: 1,
     });
@@ -105,10 +111,10 @@ describe("POST /reserve with missing fields", () => {
   });
 });
 
-// Test the POST /reserve endpoint, which should return bad request for unavailable property
-describe("POST /reserve with unavailable property", () => {
+// Test the POST /reservation endpoint, which should return bad request for unavailable property
+describe("POST /reservation with unavailable property", () => {
   it("should return 400 BAD REQUEST", async () => {
-    const response = await request(app).post("/reserve").send({
+    const response = await request(app).post("/reservation").send({
       username: "brucewayne",
       propertyid: 1,
       startdate: "2020-01-03",
@@ -121,10 +127,10 @@ describe("POST /reserve with unavailable property", () => {
   });
 });
 
-// Test the POST /reserve endpoint, which should return bad request for unavailable property
-describe("POST /reserve with unavailable property", () => {
+// Test the POST /reservation endpoint, which should return bad request for unavailable property
+describe("POST /reservation with unavailable property", () => {
   it("should return 400 BAD REQUEST", async () => {
-    const response = await request(app).post("/reserve").send({
+    const response = await request(app).post("/reservation").send({
       username: "brucewayne",
       propertyid: 1,
       startdate: "2020-01-01",
@@ -137,10 +143,10 @@ describe("POST /reserve with unavailable property", () => {
   });
 });
 
-// Test the POST /reserve endpoint, which should return bad request for user with existing reservation
-describe("POST /reserve with existing reservation", () => {
+// Test the POST /reservation endpoint, which should return bad request for user with existing reservation
+describe("POST /reservation with existing reservation", () => {
   it("should return 400 BAD REQUEST", async () => {
-    const response = await request(app).post("/reserve").send({
+    const response = await request(app).post("/reservation").send({
       username: "johndoe",
       propertyid: 2,
       startdate: "2020-01-01",
@@ -153,4 +159,20 @@ describe("POST /reserve with existing reservation", () => {
   });
 });
 
-//TODO: WRITE UTIL TESTS
+// Test the DELETE /reservation/:reservationid endpoint, which should delete a reservation known to exist in the database
+describe("DELETE /reservation/:reservationid with valid reservation", () => {
+  it("should return 200 OK", async () => {
+    const response = await request(app).delete("/reservation/1");
+    expect(response.status).toBe(200);
+    expect(response.text).toBe("Reservation deleted.");
+  });
+});
+
+// Test the DELETE /reservation/:reservationid endpoint, which should return not found for an unknown reservation
+describe("DELETE /reservation/:reservationid with unknown reservation", () => {
+  it("should return 404 Not Found", async () => {
+    const response = await request(app).delete("/reservation/0");
+    expect(response.status).toBe(404);
+    expect(response.text).toBe("Reservation not found.");
+  });
+});

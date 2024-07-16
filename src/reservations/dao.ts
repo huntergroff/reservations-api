@@ -14,3 +14,10 @@ export const findReservationsByPropertyId = (propertyid: number) =>
   model.find({ propertyid: propertyid });
 export const createReservation = (reservation: Reservation) =>
   model.create({ reservation: reservation });
+export const deleteReservation = (reservationid: number) =>
+  model.deleteOne({ reservationid: reservationid });
+export const updateReservation = (
+  reservationid: number,
+  reservation: Reservation
+) =>
+  model.updateOne({ reservationid: reservationid, reservation: reservation });
